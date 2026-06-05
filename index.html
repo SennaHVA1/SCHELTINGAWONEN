@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scheltinga Wonen & Projecten — Al 45 jaar een begrip in de regio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:            #F5F1EA;
+      --bg-warm:       #EDE8DF;
+      --dark:          #231F1A;
+      --dark-soft:     #3D3129;
+      --mid:           #7A6E64;
+      --terracotta:    #B8694A;
+      --terra-light:   #D08A6C;
+      --cream:         #FAF7F2;
+      --border:        #DDD6CB;
+      --font-serif:    'Playfair Display', Georgia, serif;
+      --font-sans:     'DM Sans', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--dark);
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ─────────────────────────────────────────── */
+    #main-nav {
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      padding: 0 5vw;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: box-shadow 0.3s;
+    }
+    #main-nav.scrolled { box-shadow: 0 2px 24px rgba(35,31,26,.09); }
+
+    .nav-logo img { height: 48px; width: auto; display: block; }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2.4rem;
+      list-style: none;
+    }
+    .nav-links > li > a,
+    .nav-links > li > span {
+      font-family: var(--font-sans);
+      font-size: .83rem;
+      font-weight: 400;
+      letter-spacing: .045em;
+      color: var(--dark-soft);
+      text-decoration: none;
+      position: relative;
+      transition: color .2s;
+    }
+    .nav-links > li > a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0;
+      width: 0; height: 1px;
+      background: var(--terracotta);
+      transition: width .3s;
+    }
+    .nav-links > li > a:hover { color: var(--terracotta); }
+    .nav-links > li > a:hover::after { width: 100%; }
+
+    .nav-phone {
+      font-size: .78rem;
+      color: var(--mid);
+      letter-spacing: .03em;
+    }
+
+    /* Dropdown */
+    .nav-dropdown { position: relative; }
+    .dropdown-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
+      background: var(--cream);
+      border: 1px solid var(--border);
+      min-width: 190px;
+      padding: .4rem 0;
+      list-style: none;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      box-shadow: 0 8px 28px rgba(35,31,26,.08);
+    }
+    .nav-dropdown:hover .dropdown-menu {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(-50%) translateY(0);
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: .55rem 1.2rem;
+      font-size: .8rem;
+      color: var(--dark-soft);
+      text-decoration: none;
+      white-space: nowrap;
+      letter-spacing: .02em;
+      transition: background .15s, color .15s;
+    }
+    .dropdown-menu a::after { display: none; }
+    .dropdown-menu a:hover { background: var(--bg-warm); color: var(--terracotta); }
+
+    /* ── HERO ─────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 93vh;
+      min-height: 580px;
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+    }
+    .hero-img {
+      position: absolute;
+      inset: 0;
+      background: url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1200') center/cover no-repeat;
+      transform: scale(1.06);
+      transition: transform 9s ease-out;
+    }
+    .hero-img.loaded { transform: scale(1); }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(35,31,26,.75) 0%,
+        rgba(35,31,26,.5)  45%,
+        rgba(35,31,26,.08) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 0 5vw 9vh;
+      max-width: 700px;
+    }
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: .72rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--terra-light);
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .8s .15s, transform .8s .15s;
+    }
+    .hero-title {
+      font-family: var(--font-serif);
+      font-size: clamp(2.8rem, 5.8vw, 5.2rem);
+      font-weight: 600;
+      line-height: 1.08;
+      color: var(--cream);
+      margin-bottom: 1.4rem;
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .9s .35s, transform .9s .35s;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-weight: 400;
+      color: var(--terra-light);
+    }
+    .hero-sub {
+      font-size: clamp(.9rem, 1.3vw, 1.05rem);
+      font-weight: 300;
+      color: rgba(250,247,242,.8);
+      line-height: 1.75;
+      max-width: 460px;
+      margin-bottom: 2.4rem;
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .9s .55s, transform .9s .55s;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .9s .75s, transform .9s .75s;
+    }
+    .hero.ready .hero-eyebrow,
+    .hero.ready .hero-title,
+    .hero.ready .hero-sub,
+    .hero.ready .hero-ctas { opacity: 1; transform: none; }
+
+    .btn-pri {
+      display: inline-block;
+      padding: .85rem 2.1rem;
+      background: var(--terracotta);
+      color: #fff;
+      font-size: .85rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      text-decoration: none;
+      border: 1.5px solid transparent;
+      transition: background .25s, color .25s, border-color .25s;
+    }
+    .btn-pri:hover {
+      background: transparent;
+      color: var(--cream);
+      border-color: rgba(250,247,242,.55);
+    }
+    .btn-sec {
+      display: inline-block;
+      padding: .85rem 2.1rem;
+      background: transparent;
+      color: rgba(250,247,242,.82);
+      font-size: .85rem;
+      font-weight: 400;
+      letter-spacing: .05em;
+      text-decoration: none;
+      border: 1.5px solid rgba(250,247,242,.38);
+      transition: background .25s, border-color .25s;
+    }
+    .btn-sec:hover {
+      background: rgba(250,247,242,.08);
+      border-color: rgba(250,247,242,.65);
+    }
+
+    /* ── INTRO ───────────────────────────────────────── */
+    .intro {
+      padding: 8rem 5vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7rem;
+      align-items: start;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .intro-left { position: sticky; top: 100px; }
+    .intro-label {
+      display: block;
+      font-size: .7rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      margin-bottom: 1.4rem;
+    }
+    .intro-statement {
+      font-family: var(--font-serif);
+      font-size: clamp(2rem, 3.4vw, 3.3rem);
+      font-weight: 600;
+      line-height: 1.13;
+      color: var(--dark);
+    }
+    .intro-statement em { font-style: italic; font-weight: 400; color: var(--terracotta); }
+    .intro-right { padding-top: 2.5rem; }
+    .intro-body {
+      font-size: 1rem;
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--dark-soft);
+      margin-bottom: 1.4rem;
+    }
+    .intro-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 2.7rem;
+      font-weight: 700;
+      color: var(--dark);
+      line-height: 1;
+      margin-bottom: .3rem;
+    }
+    .stat-lbl {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--mid);
+    }
+
+    /* ── ASSORTIMENT ─────────────────────────────────── */
+    .assortiment { background: var(--bg-warm); padding: 8rem 5vw; }
+    .section-hdr {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 4rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .section-hdr { margin-bottom: 4rem; }
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: clamp(1.8rem, 2.8vw, 2.8rem);
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .section-cta {
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      text-decoration: none;
+      border-bottom: 1px solid currentColor;
+      padding-bottom: 2px;
+      transition: opacity .2s;
+    }
+    .section-cta:hover { opacity: .65; }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.2rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    .cat-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .cat-item img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform .65s ease;
+    }
+    .cat-item:hover img { transform: scale(1.04); }
+    .cat-shade {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(35,31,26,.82) 0%, rgba(35,31,26,.22) 52%, transparent 100%);
+    }
+    .cat-label {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 1.8rem 1.7rem;
+    }
+    .cat-n {
+      font-size: .62rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--terra-light);
+      margin-bottom: .35rem;
+    }
+    .cat-name {
+      font-family: var(--font-serif);
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: .45rem;
+    }
+    .cat-desc {
+      font-size: .78rem;
+      font-weight: 300;
+      color: rgba(250,247,242,.7);
+      line-height: 1.55;
+      max-width: 270px;
+      opacity: 0;
+      transform: translateY(7px);
+      transition: opacity .3s, transform .3s;
+    }
+    .cat-item:hover .cat-desc { opacity: 1; transform: none; }
+
+    .cat-item:nth-child(1) { grid-column: span 5; grid-row: span 2; min-height: 530px; }
+    .cat-item:nth-child(2) { grid-column: span 4; min-height: 255px; }
+    .cat-item:nth-child(3) { grid-column: span 3; min-height: 255px; }
+    .cat-item:nth-child(4) { grid-column: span 4; min-height: 265px; }
+    .cat-item:nth-child(5) { grid-column: span 3; min-height: 265px; }
+    .cat-item:nth-child(6) { grid-column: span 5; min-height: 300px; }
+
+    /* ── USPs ────────────────────────────────────────── */
+    .usps { padding: 8rem 5vw; max-width: 1400px; margin: 0 auto; }
+    .usps-hdr { margin-bottom: 4.5rem; }
+    .usps-list {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      border-top: 1px solid var(--border);
+    }
+    .usp-item {
+      padding: 2.8rem 2.2rem 2.8rem 0;
+      border-right: 1px solid var(--border);
+    }
+    .usp-item:last-child { border-right: none; }
+    .usp-n {
+      font-family: var(--font-serif);
+      font-size: 3.2rem;
+      font-weight: 700;
+      color: var(--border);
+      line-height: 1;
+      margin-bottom: 1.1rem;
+      transition: color .3s;
+    }
+    .usp-item:hover .usp-n { color: var(--terracotta); }
+    .usp-ttl {
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.3;
+      margin-bottom: .6rem;
+    }
+    .usp-txt {
+      font-size: .8rem;
+      font-weight: 300;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── OPENINGSTIJDEN ──────────────────────────────── */
+    .openingstijden { background: var(--dark); padding: 8rem 5vw; }
+    .ot-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: 6rem;
+      align-items: start;
+    }
+    .ot-left .section-title { color: var(--cream); margin-bottom: 1.2rem; }
+    .ot-left p {
+      font-size: .88rem;
+      font-weight: 300;
+      color: rgba(250,247,242,.5);
+      line-height: 1.85;
+      margin-bottom: 1rem;
+    }
+    .btn-call {
+      display: inline-block;
+      margin-top: 1.6rem;
+      padding: .85rem 2rem;
+      background: var(--terracotta);
+      color: #fff;
+      font-size: .85rem;
+      letter-spacing: .05em;
+      text-decoration: none;
+      transition: background .25s, transform .2s;
+    }
+    .btn-call:hover { background: var(--terra-light); transform: translateY(-2px); }
+
+    .loc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .loc-card {
+      background: rgba(250,247,242,.04);
+      border: 1px solid rgba(250,247,242,.07);
+      overflow: hidden;
+      transition: background .3s;
+    }
+    .loc-card:hover { background: rgba(250,247,242,.07); }
+    .loc-photo {
+      display: block;
+      width: 100%;
+      height: 175px;
+      object-fit: cover;
+      filter: brightness(.8) saturate(.75);
+      transition: filter .4s;
+    }
+    .loc-card:hover .loc-photo { filter: brightness(.9) saturate(.9); }
+    .loc-body { padding: 1.8rem 1.8rem 2rem; }
+    .loc-city {
+      font-family: var(--font-serif);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--cream);
+      margin-bottom: .2rem;
+    }
+    .loc-tag {
+      font-size: .68rem;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,.35);
+      margin-bottom: 1.4rem;
+    }
+    .h-row {
+      display: flex;
+      justify-content: space-between;
+      padding: .42rem 0;
+      border-bottom: 1px solid rgba(250,247,242,.05);
+      font-size: .8rem;
+    }
+    .h-row:last-child { border-bottom: none; }
+    .h-day { color: rgba(250,247,242,.42); font-weight: 300; }
+    .h-time { color: rgba(250,247,242,.75); }
+    .h-closed { color: rgba(250,247,242,.28); font-style: italic; }
+
+    /* ── CTA BANNER ──────────────────────────────────── */
+    .cta-banner {
+      position: relative;
+      background: var(--dark-soft);
+      padding: 8rem 5vw;
+      overflow: hidden;
+    }
+    .cta-banner::before {
+      content: '';
+      position: absolute;
+      top: -45%; right: -4%;
+      width: 520px; height: 520px;
+      border-radius: 50%;
+      background: rgba(184,105,74,.07);
+      pointer-events: none;
+    }
+    .cta-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -50%; left: 10%;
+      width: 320px; height: 320px;
+      border-radius: 50%;
+      background: rgba(184,105,74,.04);
+      pointer-events: none;
+    }
+    .cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 5rem;
+      align-items: center;
+    }
+    .cta-inner .section-title {
+      color: var(--cream);
+      font-size: clamp(2rem, 3.6vw, 3.6rem);
+      margin-bottom: .9rem;
+    }
+    .cta-inner p {
+      font-size: .95rem;
+      font-weight: 300;
+      color: rgba(250,247,242,.55);
+      line-height: 1.85;
+      max-width: 480px;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────── */
+    footer { background: #17130E; padding: 5.5rem 5vw 3rem; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4rem;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(250,247,242,.07);
+    }
+    .footer-logo img {
+      height: 48px;
+      width: auto;
+      display: block;
+      filter: brightness(0) invert(1) opacity(.65);
+      margin-bottom: 1.1rem;
+    }
+    .footer-tag {
+      font-size: .78rem;
+      color: rgba(250,247,242,.3);
+      line-height: 1.8;
+      max-width: 210px;
+    }
+    .footer-col-ttl {
+      font-size: .63rem;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: rgba(250,247,242,.3);
+      margin-bottom: 1.6rem;
+    }
+    .f-loc { margin-bottom: 1.8rem; }
+    .f-loc-name {
+      font-family: var(--font-serif);
+      font-size: .98rem;
+      color: rgba(250,247,242,.65);
+      margin-bottom: .3rem;
+    }
+    .f-loc p {
+      font-size: .75rem;
+      color: rgba(250,247,242,.32);
+      line-height: 1.85;
+    }
+    .social-links { display: flex; flex-direction: column; gap: .75rem; }
+    .soc-link {
+      display: flex;
+      align-items: center;
+      gap: .7rem;
+      text-decoration: none;
+      color: rgba(250,247,242,.42);
+      font-size: .8rem;
+      transition: color .2s;
+    }
+    .soc-link:hover { color: rgba(250,247,242,.8); }
+    .soc-icon {
+      width: 30px; height: 30px;
+      border: 1px solid rgba(250,247,242,.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color .2s;
+    }
+    .soc-link:hover .soc-icon { border-color: rgba(250,247,242,.36); }
+    .footer-phone {
+      display: block;
+      margin-top: 1.8rem;
+      font-size: .78rem;
+      color: rgba(250,247,242,.38);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-phone:hover { color: rgba(250,247,242,.72); }
+    .footer-btm {
+      max-width: 1400px;
+      margin: 2.2rem auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { font-size: .68rem; color: rgba(250,247,242,.2); }
+    .footer-demo {
+      font-size: .65rem;
+      color: rgba(250,247,242,.18);
+      font-style: italic;
+      text-align: right;
+    }
+
+    /* ── SCROLL REVEAL ───────────────────────────────── */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .72s ease, transform .72s ease;
+    }
+    .fade-up.visible { opacity: 1; transform: none; }
+
+    .fade-up.d1 { transition-delay: .08s; }
+    .fade-up.d2 { transition-delay: .17s; }
+    .fade-up.d3 { transition-delay: .26s; }
+    .fade-up.d4 { transition-delay: .35s; }
+    .fade-up.d5 { transition-delay: .44s; }
+
+    /* ── HAMBURGER BUTTON ────────────────────────────── */
+    .nav-burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      z-index: 300;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .nav-burger span {
+      display: block;
+      width: 22px;
+      height: 1.5px;
+      background: var(--dark);
+      transition: transform .3s, opacity .25s;
+      transform-origin: center;
+    }
+    .nav-burger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-burger.open span:nth-child(2) { opacity: 0; }
+    .nav-burger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+    /* ── MOBILE MENU OVERLAY ─────────────────────────── */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 150;
+      background: var(--cream);
+      display: flex;
+      flex-direction: column;
+      padding: 90px 7vw 3rem;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(100%);
+      transition: opacity .32s ease, transform .35s cubic-bezier(.4,0,.2,1);
+      overflow-y: auto;
+    }
+    .mobile-menu.open {
+      opacity: 1;
+      pointer-events: all;
+      transform: none;
+    }
+    .mob-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .mob-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.15rem 0;
+    }
+    .mob-row a {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
+      font-weight: 500;
+      color: var(--dark);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .mob-row a:hover { color: var(--terracotta); }
+    .mob-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      color: var(--mid);
+      font-size: 1rem;
+      line-height: 1;
+      transition: transform .3s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .mob-toggle.open { transform: rotate(180deg); }
+    .mob-sub {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height .35s ease;
+      display: flex;
+      flex-direction: column;
+      padding-left: 0;
+    }
+    .mob-sub.open { max-height: 320px; }
+    .mob-sub a {
+      font-family: var(--font-sans);
+      font-size: .95rem;
+      color: var(--mid);
+      text-decoration: none;
+      padding: .55rem 0 .55rem 1rem;
+      border-left: 2px solid var(--border);
+      margin-bottom: .2rem;
+      transition: color .2s, border-color .2s;
+    }
+    .mob-sub a:hover { color: var(--terracotta); border-color: var(--terracotta); }
+    .mob-footer {
+      margin-top: auto;
+      padding-top: 2.5rem;
+    }
+    .mob-footer-label {
+      font-size: .68rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: .6rem;
+    }
+    .mob-footer-phone {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: var(--dark);
+      text-decoration: none;
+      display: block;
+      margin-bottom: 1.4rem;
+    }
+    .mob-footer-links {
+      display: flex;
+      gap: 1.2rem;
+    }
+    .mob-footer-links a {
+      font-size: .78rem;
+      color: var(--mid);
+      text-decoration: none;
+      letter-spacing: .04em;
+      transition: color .2s;
+    }
+    .mob-footer-links a:hover { color: var(--terracotta); }
+
+    /* ── RESPONSIVE — TABLET (≤1024px) ──────────────── */
+    @media (max-width: 1024px) {
+      .intro { gap: 4rem; }
+      .usps-list { grid-template-columns: repeat(3, 1fr); }
+      .usp-item:nth-child(4) { border-top: 1px solid var(--border); }
+      .usp-item:nth-child(5) { border-top: 1px solid var(--border); border-right: none; }
+      .cat-item:nth-child(1) { grid-column: span 6; }
+      .cat-item:nth-child(2) { grid-column: span 3; }
+      .cat-item:nth-child(3) { grid-column: span 3; }
+      .cat-item:nth-child(4) { grid-column: span 4; }
+      .cat-item:nth-child(5) { grid-column: span 4; }
+      .cat-item:nth-child(6) { grid-column: span 4; }
+      .footer-top { gap: 2.5rem; }
+    }
+
+    /* ── RESPONSIVE — BURGER BREAKPOINT (≤900px) ─────── */
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-burger { display: flex; }
+    }
+
+    /* ── RESPONSIVE — MOBILE (≤768px) ───────────────── */
+    @media (max-width: 768px) {
+      /* Hero */
+      .hero { height: 85vh; min-height: 460px; }
+      .hero-content { padding: 0 5vw 6vh; }
+      .hero-overlay {
+        background: linear-gradient(
+          to right,
+          rgba(35,31,26,.8) 0%,
+          rgba(35,31,26,.65) 60%,
+          rgba(35,31,26,.3) 100%
+        );
+      }
+
+      /* Intro */
+      .intro {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        padding: 4.5rem 5vw;
+      }
+      .intro-left { position: static; }
+      .intro-right { padding-top: 0; }
+      .intro-stats { gap: 2rem; }
+
+      /* Assortiment */
+      .assortiment { padding: 4.5rem 5vw; }
+      .section-hdr { margin-bottom: 2.5rem; }
+      .cat-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: .7rem;
+      }
+      .cat-item:nth-child(1),
+      .cat-item:nth-child(2),
+      .cat-item:nth-child(3),
+      .cat-item:nth-child(4),
+      .cat-item:nth-child(5),
+      .cat-item:nth-child(6) {
+        grid-column: span 1;
+        grid-row: span 1;
+        min-height: 190px;
+      }
+      /* Always show desc on mobile (no hover) */
+      .cat-desc { opacity: 1; transform: none; font-size: .7rem; }
+
+      /* USPs */
+      .usps { padding: 4.5rem 5vw; }
+      .usps-hdr { margin-bottom: 2.5rem; }
+      .usps-list { grid-template-columns: 1fr; }
+      .usp-item {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 1.8rem 0;
+      }
+      .usp-item:nth-child(4) { border-top: none; }
+      .usp-item:nth-child(5) { border-top: none; border-bottom: none; }
+      .usp-n { font-size: 2.4rem; margin-bottom: .7rem; }
+
+      /* Openingstijden */
+      .openingstijden { padding: 4.5rem 5vw; }
+      .ot-inner {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .loc-grid { grid-template-columns: 1fr; }
+
+      /* CTA Banner */
+      .cta-banner { padding: 4.5rem 5vw; }
+      .cta-inner {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      /* Footer */
+      footer { padding: 4rem 5vw 2rem; }
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2.2rem;
+      }
+      .footer-tag { max-width: 100%; }
+      .footer-btm {
+        flex-direction: column;
+        gap: .8rem;
+        text-align: center;
+      }
+      .footer-demo { text-align: center; }
+    }
+
+    /* ── RESPONSIVE — SMALL MOBILE (≤480px) ─────────── */
+    @media (max-width: 480px) {
+      nav { padding: 0 4vw; }
+      .hero { height: 88vh; }
+      .hero-ctas { flex-direction: column; gap: .8rem; }
+      .btn-pri, .btn-sec { text-align: center; }
+      .cat-grid { grid-template-columns: 1fr; }
+      .cat-item:nth-child(n) { min-height: 210px; }
+      .intro-stats { flex-direction: column; gap: 1.2rem; }
+      .stat-num { font-size: 2.2rem; }
+      .loc-photo { height: 155px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ───────────────────────────────────────────── -->
+<nav id="main-nav">
+  <a href="#" class="nav-logo">
+    <img src="logo%20transparent.png" alt="Scheltinga Wonen & Projecten">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#over">Over ons</a></li>
+    <li class="nav-dropdown">
+      <a href="#assortiment">Assortiment ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#assortiment">Vloeren</a></li>
+        <li><a href="#assortiment">Raamdecoratie</a></li>
+        <li><a href="#assortiment">Buiten zonwering</a></li>
+        <li><a href="#assortiment">Wandbekleding</a></li>
+        <li><a href="#assortiment">Woonaccessoires</a></li>
+      </ul>
+    </li>
+    <li class="nav-dropdown">
+      <a href="#winkels">Winkels ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="#winkels">Purmerend</a></li>
+        <li><a href="#winkels">Badhoevedorp</a></li>
+      </ul>
+    </li>
+    <li><a href="#contact">Contact</a></li>
+    <li><span class="nav-phone">0299 — 413 561</span></li>
+  </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Menu openen" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ── MOBILE MENU ────────────────────────────────── -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <nav>
+    <div class="mob-item">
+      <div class="mob-row"><a href="#over" class="mob-nav-link">Over ons</a></div>
+    </div>
+    <div class="mob-item">
+      <div class="mob-row">
+        <a href="#assortiment" class="mob-nav-link">Assortiment</a>
+        <button class="mob-toggle" aria-label="Submenu uitklappen">▾</button>
+      </div>
+      <div class="mob-sub">
+        <a href="#assortiment" class="mob-nav-link">Vloeren</a>
+        <a href="#assortiment" class="mob-nav-link">Raamdecoratie</a>
+        <a href="#assortiment" class="mob-nav-link">Buiten zonwering</a>
+        <a href="#assortiment" class="mob-nav-link">Wandbekleding</a>
+        <a href="#assortiment" class="mob-nav-link">Woonaccessoires</a>
+      </div>
+    </div>
+    <div class="mob-item">
+      <div class="mob-row">
+        <a href="#winkels" class="mob-nav-link">Winkels</a>
+        <button class="mob-toggle" aria-label="Submenu uitklappen">▾</button>
+      </div>
+      <div class="mob-sub">
+        <a href="#winkels" class="mob-nav-link">Purmerend</a>
+        <a href="#winkels" class="mob-nav-link">Badhoevedorp</a>
+      </div>
+    </div>
+    <div class="mob-item">
+      <div class="mob-row"><a href="#contact" class="mob-nav-link">Contact</a></div>
+    </div>
+  </nav>
+  <div class="mob-footer">
+    <div class="mob-footer-label">Bel ons</div>
+    <a href="tel:0299413561" class="mob-footer-phone mob-nav-link">0299 — 413 561</a>
+    <div class="mob-footer-links">
+      <a href="https://facebook.com/scheltingawonenenprojecten" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://instagram.com/scheltingawonen" target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </div>
+</div>
+
+<!-- ── HERO ──────────────────────────────────────────── -->
+<section class="hero" id="hero">
+  <div class="hero-img" id="hero-img"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="hero-eyebrow">Purmerend &middot; Badhoevedorp &middot; Sinds 1980</span>
+    <h1 class="hero-title">Al 45 jaar<br><em>thuis in wonen.</em></h1>
+    <p class="hero-sub">Vloeren, gordijnen en raamdecoratie op maat — door eigen vakmensen geïnstalleerd.</p>
+    <div class="hero-ctas">
+      <a href="#assortiment" class="btn-pri">Bekijk ons assortiment</a>
+      <a href="#winkels" class="btn-sec">Kom langs in de winkel</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── INTRO ─────────────────────────────────────────── -->
+<section class="intro" id="over">
+  <div class="intro-left fade-up">
+    <span class="intro-label">Over Scheltinga</span>
+    <h2 class="intro-statement">Vakmanschap<br>dat u thuis<br><em>voelt.</em></h2>
+  </div>
+  <div class="intro-right fade-up d1">
+    <p class="intro-body">Scheltinga Wonen &amp; Projecten is bij uitstek de leverancier voor uw vloer- en raamdecoratie. Wij zijn gespecialiseerd in het egaliseren en leggen van diverse soorten vloeren. Alles wat wij leveren wordt als maatwerk gemaakt en professioneel uitgevoerd door onze eigen ervaren stoffeerders.</p>
+    <p class="intro-body">Met twee winkels in de regio — in Purmerend en Badhoevedorp — en een team dat u thuis komt inmeten, zorgen wij voor een persoonlijke ervaring van begin tot eind. Dat is al 45 jaar onze belofte.</p>
+    <div class="intro-stats">
+      <div>
+        <div class="stat-num">45</div>
+        <div class="stat-lbl">Jaar ervaring</div>
+      </div>
+      <div>
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">Winkels in de regio</div>
+      </div>
+      <div>
+        <div class="stat-num">15+</div>
+        <div class="stat-lbl">Jaar PVC-expertise</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ASSORTIMENT ───────────────────────────────────── -->
+<section class="assortiment" id="assortiment">
+  <div class="section-hdr fade-up">
+    <h2 class="section-title">Ons assortiment</h2>
+    <a href="#contact" class="section-cta">Vraag advies →</a>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-item fade-up">
+      <img src="https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=1200" alt="Vloeren" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">01</div>
+        <div class="cat-name">Vloeren</div>
+        <div class="cat-desc">PVC, vinyl, laminaat, tapijt en marmoleum. Meer dan 15 jaar PVC-ervaring met realistische prints.</div>
+      </div>
+    </div>
+    <div class="cat-item fade-up d1">
+      <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200" alt="Tapijt" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">02</div>
+        <div class="cat-name">Tapijt</div>
+        <div class="cat-desc">Nieuwste ontwikkelingen. Antibacterieel en zeer goed reinigbaar, ook met chloor.</div>
+      </div>
+    </div>
+    <div class="cat-item fade-up d2">
+      <img src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=1200" alt="Gordijnen & Vitrages" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">03</div>
+        <div class="cat-name">Gordijnen &amp; Vitrages</div>
+        <div class="cat-desc">Grootste collectie van Noord-Holland. Lange stalen, maatwerk.</div>
+      </div>
+    </div>
+    <div class="cat-item fade-up d1">
+      <img src="https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=1200" alt="Raamdecoratie" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">04</div>
+        <div class="cat-name">Raamdecoratie</div>
+        <div class="cat-desc">Jaloezieën, rolgordijnen, binnen en buiten zonwering in vele kleuren.</div>
+      </div>
+    </div>
+    <div class="cat-item fade-up d2">
+      <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?w=1200" alt="Buitenzonwering" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">05</div>
+        <div class="cat-name">Buitenzonwering</div>
+        <div class="cat-desc">Knikarmschermen en meer. Professioneel geïnstalleerd door ons eigen team.</div>
+      </div>
+    </div>
+    <div class="cat-item fade-up d3">
+      <img src="IMG-20160422-WA0015.jpg" alt="Woonaccessoires & Wandbekleding" loading="lazy">
+      <div class="cat-shade"></div>
+      <div class="cat-label">
+        <div class="cat-n">06</div>
+        <div class="cat-name">Woonaccessoires &amp; Wandbekleding</div>
+        <div class="cat-desc">Completeer uw interieur. Ontdek onze curated collectie in de winkel.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── USPs ──────────────────────────────────────────── -->
+<section class="usps" id="kwaliteit">
+  <div class="usps-hdr fade-up">
+    <h2 class="section-title">Waarom Scheltinga?</h2>
+  </div>
+  <div class="usps-list">
+    <div class="usp-item fade-up">
+      <div class="usp-n">01</div>
+      <div class="usp-ttl">Al 45 jaar een begrip in de regio</div>
+      <div class="usp-txt">Generaties lang vertrouwen van klanten in Purmerend en de wijde omgeving.</div>
+    </div>
+    <div class="usp-item fade-up d1">
+      <div class="usp-n">02</div>
+      <div class="usp-ttl">Gratis inmeten bij u thuis</div>
+      <div class="usp-txt">Wij komen naar u toe — voor zowel vloeren als raamdecoratie, zonder verplichtingen.</div>
+    </div>
+    <div class="usp-item fade-up d2">
+      <div class="usp-n">03</div>
+      <div class="usp-ttl">Eigen ervaren stoffeerders</div>
+      <div class="usp-txt">Professionele installatie door ons eigen team. Geen onderaannemers, altijd kwaliteit.</div>
+    </div>
+    <div class="usp-item fade-up d3">
+      <div class="usp-n">04</div>
+      <div class="usp-ttl">Grootste gordijnencollectie van Noord-Holland</div>
+      <div class="usp-txt">Lange stalen voor een eerlijke stofimpressie. Altijd de juiste keuze voor uw ruimte.</div>
+    </div>
+    <div class="usp-item fade-up d4">
+      <div class="usp-n">05</div>
+      <div class="usp-ttl">Alles op maat gemaakt</div>
+      <div class="usp-txt">Van gordijn tot vloer — elk product afgestemd op uw woning en wensen.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── OPENINGSTIJDEN ────────────────────────────────── -->
+<section class="openingstijden" id="winkels">
+  <div class="ot-inner">
+    <div class="ot-left fade-up">
+      <h2 class="section-title">Onze winkels</h2>
+      <p>Bezoek ons in Purmerend of Badhoevedorp. Onze medewerkers helpen u graag verder met persoonlijk advies en een ruim aanbod aan stalen en materialen.</p>
+      <p>Liever dat wij naar u toekomen? Bel ons voor een gratis inmeetafspraak aan huis.</p>
+      <a href="tel:0299413561" class="btn-call">0299 — 413 561</a>
+    </div>
+    <div class="loc-grid fade-up d1">
+      <div class="loc-card">
+        <img class="loc-photo" src="IMG-20160422-WA0015.jpg" alt="Scheltinga Purmerend">
+        <div class="loc-body">
+          <div class="loc-city">Purmerend</div>
+          <div class="loc-tag">Stadscentrum</div>
+          <div class="h-row"><span class="h-day">Di – Za</span><span class="h-time">9:30 – 17:00</span></div>
+          <div class="h-row"><span class="h-day">Zo + Ma</span><span class="h-closed">Gesloten</span></div>
+        </div>
+      </div>
+      <div class="loc-card">
+        <img class="loc-photo" src="IMG-20160423-WA0033.jpg" alt="Scheltinga Badhoevedorp">
+        <div class="loc-body">
+          <div class="loc-city">Badhoevedorp</div>
+          <div class="loc-tag">Rijksweg</div>
+          <div class="h-row"><span class="h-day">Di / Wo / Do</span><span class="h-time">10:00 – 17:00</span></div>
+          <div class="h-row"><span class="h-day">Zaterdag</span><span class="h-time">10:00 – 16:30</span></div>
+          <div class="h-row"><span class="h-day">Zo + Ma</span><span class="h-closed">Gesloten</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ────────────────────────────────────── -->
+<section class="cta-banner" id="contact">
+  <div class="cta-inner">
+    <div class="fade-up">
+      <h2 class="section-title">Wij komen gratis<br>bij u inmeten.</h2>
+      <p>Maatwerk voor vloeren en raamdecoratie, professioneel geïnstalleerd door onze eigen vakmensen. Maak vrijblijvend een afspraak.</p>
+    </div>
+    <div class="fade-up d1">
+      <a href="tel:0299413561" class="btn-call">Maak een afspraak</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ─────────────────────────────────────────── -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <a href="#">
+        <img src="logo%20transparent.png" alt="Scheltinga Wonen & Projecten" class="footer-logo" style="height:48px;width:auto;display:block;filter:brightness(0) invert(1) opacity(.65);margin-bottom:1.1rem;">
+      </a>
+      <p class="footer-tag">Al 45 jaar een begrip in de regio. Vloeren, gordijnen en raamdecoratie op maat.</p>
+    </div>
+    <div>
+      <div class="footer-col-ttl">Onze winkels</div>
+      <div class="f-loc">
+        <div class="f-loc-name">Purmerend</div>
+        <p>Di t/m Za: 9:30 – 17:00<br>Zo + Ma: Gesloten<br>Tel: 0299-413561</p>
+      </div>
+      <div class="f-loc">
+        <div class="f-loc-name">Badhoevedorp</div>
+        <p>Di / Wo / Do: 10:00 – 17:00<br>Zaterdag: 10:00 – 16:30<br>Zo + Ma: Gesloten</p>
+      </div>
+    </div>
+    <div>
+      <div class="footer-col-ttl">Volg ons</div>
+      <div class="social-links">
+        <a href="https://facebook.com/scheltingawonenenprojecten" target="_blank" rel="noopener" class="soc-link">
+          <span class="soc-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </span>
+          Facebook
+        </a>
+        <a href="https://instagram.com/scheltingawonen" target="_blank" rel="noopener" class="soc-link">
+          <span class="soc-icon">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </span>
+          Instagram
+        </a>
+      </div>
+      <a href="tel:0299413561" class="footer-phone">&#9990; 0299 — 413 561</a>
+    </div>
+  </div>
+  <div class="footer-btm">
+    <p class="footer-copy">&copy; 2025 Scheltinga Wonen &amp; Projecten. Alle rechten voorbehouden.</p>
+    <p class="footer-demo">Dit is een gratis demo. Volledige website na akkoord beschikbaar.</p>
+  </div>
+</footer>
+
+<script>
+  // Nav scroll shadow
+  const nav = document.getElementById('main-nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 40);
+  }, { passive: true });
+
+  // Hero entrance
+  const hero  = document.getElementById('hero');
+  const heroImg = document.getElementById('hero-img');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      hero.classList.add('ready');
+      heroImg.classList.add('loaded');
+    }, 80);
+  });
+
+  // Scroll-reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // ── Hamburger / Mobile menu ──────────────────────────
+  const burger     = document.getElementById('nav-burger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  function closeMobileMenu() {
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+    mobileMenu.classList.remove('open');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  burger.addEventListener('click', () => {
+    const isOpen = burger.classList.toggle('open');
+    burger.setAttribute('aria-expanded', isOpen);
+    mobileMenu.classList.toggle('open', isOpen);
+    mobileMenu.setAttribute('aria-hidden', !isOpen);
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+  });
+
+  // Close on any nav link click inside mobile menu
+  mobileMenu.querySelectorAll('.mob-nav-link').forEach(link => {
+    link.addEventListener('click', closeMobileMenu);
+  });
+
+  // Accordion toggles for submenus
+  mobileMenu.querySelectorAll('.mob-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sub = btn.closest('.mob-item').querySelector('.mob-sub');
+      const isOpen = sub.classList.toggle('open');
+      btn.classList.toggle('open', isOpen);
+    });
+  });
+
+  // Close menu on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMobileMenu();
+  });
+</script>
+</body>
+</html>
